@@ -5,6 +5,7 @@ node_modules/
 
 # Expo
 .env
+.env.*
 .expo/
 dist/
 web-build/
