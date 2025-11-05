@@ -18,19 +18,14 @@ import { Ionicons } from "@expo/vector-icons";
 import COLORS from "@/constants/colors";
 import { Image } from "expo-image";
 import Loader from "@/components/Loader";
-
-interface ResponseProps {
-  success: boolean;
-  data?: any;
-  error?: any;
-}
+import ResponseProps from "@/services/ResponseProps";
 
 const Profile = () => {
   const [books, setBooks] = useState<any>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [deleteBookId, setDeleteBookId] = useState<any>(null);
-  const { token } = useAuthStore();
+  const { token }: { token: string | null } = useAuthStore();
 
   const router: Router = useRouter();
 

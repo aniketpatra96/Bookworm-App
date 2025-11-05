@@ -15,16 +15,27 @@ import { Ionicons } from "@expo/vector-icons";
 import COLORS from "@/constants/colors";
 import { router } from "expo-router";
 import useAuthStore from "@/store/authStore";
+import ResponseProps from "@/services/ResponseProps";
 
 const Signup = () => {
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const { isLoading, register } = useAuthStore();
+  const {
+    isLoading,
+    register,
+  }: {
+    isLoading: boolean;
+    register: (
+      username: string,
+      email: string,
+      password: string
+    ) => Promise<{ success: boolean; error?: string }>;
+  } = useAuthStore();
 
-  const handleSignup = async () => {
-    const result = await register(username, email, password);
+  const handleSignup: () => Promise<void> = async () => {
+    const result: ResponseProps = await register(username, email, password);
     if (result.success) {
       setEmail("");
       setPassword("");
@@ -34,7 +45,7 @@ const Signup = () => {
       Alert.alert("Registration Error", result.error);
     }
   };
-  
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}

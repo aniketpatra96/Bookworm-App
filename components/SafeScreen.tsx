@@ -1,12 +1,12 @@
 import { StyleSheet, View } from "react-native";
 import React, { FC, ReactNode } from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 import COLORS from "@/constants/colors";
 
 const SafeScreen: FC<{
   children: ReactNode;
 }> = ({ children }) => {
-  const insets = useSafeAreaInsets();
+  const insets: EdgeInsets = useSafeAreaInsets();
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       {children}

@@ -6,7 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import COLORS from "@/constants/colors";
 
 const LogoutButton = () => {
-  const { logout } = useAuthStore();
+  const { logout }: { logout: () => Promise<void> } = useAuthStore();
 
   const confirmLogout = (): void => {
     Alert.alert("Logout", "Are you sure you want to logout ?", [

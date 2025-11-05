@@ -19,17 +19,13 @@ import * as ImagePicker from "expo-image-picker";
 import { readAsStringAsync, EncodingType } from "expo-file-system/legacy";
 import useAuthStore from "@/store/authStore";
 import bookService from "@/services/book.service";
+import ResponseProps from "@/services/ResponseProps";
 
 interface BookData {
   title: string;
   caption: string;
   rating: string;
   image: string;
-}
-
-interface responseProps {
-  success: boolean;
-  error?: any;
 }
 
 const Create = () => {
@@ -39,7 +35,7 @@ const Create = () => {
   const [image, setImage] = useState<any>(null);
   const [imageBase64, setImageBase64] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const { token } = useAuthStore();
+  const { token }: { token: string | null } = useAuthStore();
 
   const router: Router = useRouter();
 
@@ -47,7 +43,7 @@ const Create = () => {
     try {
       // request permission if needed
       if (Platform.OS !== "web") {
-        const { status } =
+        const { status }: { status: ImagePicker.PermissionStatus } =
           await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== "granted") {
           Alert.alert(
@@ -73,7 +69,7 @@ const Create = () => {
         if (result.assets[0].base64) setImageBase64(result.assets[0].base64);
         else {
           // otherwise, convert to base64
-          const base64 = await readAsStringAsync(result.assets[0].uri, {
+          const base64: string = await readAsStringAsync(result.assets[0].uri, {
             encoding: EncodingType.Base64,
           });
           setImageBase64(base64);
@@ -108,7 +104,10 @@ const Create = () => {
         rating: rating.toString(),
         image: imageDataUrl,
       };
-      const response: responseProps = await bookService.createBook(bookData, token!);
+      const response: ResponseProps = await bookService.createBook(
+        bookData,
+        token!
+      );
       if (response.success) {
         Alert.alert(
           "Success",

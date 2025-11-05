@@ -15,15 +15,10 @@ import COLORS from "@/constants/colors";
 import { formatPublishDate } from "@/lib/utils";
 import { usePathname } from "expo-router";
 import Loader from "@/components/Loader";
-
-interface ResponseProps {
-  success: boolean;
-  data?: any;
-  error?: any;
-}
+import ResponseProps from "@/services/ResponseProps";
 
 const Home = () => {
-  const { token } = useAuthStore();
+  const { token }: { token: string | null } = useAuthStore();
   const [books, setBooks] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -37,9 +32,12 @@ const Home = () => {
     try {
       if (refresh) setRefreshing(true);
       else if (pageNum === 1) setLoading(true);
-      const response: ResponseProps = await bookService.fetchBooks(pageNum, token!);
+      const response: ResponseProps = await bookService.fetchBooks(
+        pageNum,
+        token!
+      );
       if (response.success) {
-        const uniqueBooks =
+        const uniqueBooks: any =
           refresh || pageNum === 1
             ? response.data.books
             : Array.from(

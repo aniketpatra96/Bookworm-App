@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 interface BookData {
   title: string;
@@ -16,12 +16,16 @@ class BookService {
 
   async createBook(bookData: BookData, token: string) {
     try {
-      const response = await axios.post(`${this.apiUrl}/api/books`, bookData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response: AxiosResponse<any, any, {}> = await axios.post(
+        `${this.apiUrl}/api/books`,
+        bookData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       if (response.status !== 201) {
         throw new Error("Failed to create book");
       }
@@ -34,7 +38,7 @@ class BookService {
 
   async fetchBooks(pageNum: number, token: string) {
     try {
-      const response = await axios.get(
+      const response: AxiosResponse<any, any, {}> = await axios.get(
         `${this.apiUrl}/api/books?page=${pageNum}&limit=3`,
         {
           headers: {
@@ -55,12 +59,15 @@ class BookService {
 
   async fetchRecommendedBooks(token: string) {
     try {
-      const response = await axios.get(`${this.apiUrl}/api/books/user`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response: AxiosResponse<any, any, {}> = await axios.get(
+        `${this.apiUrl}/api/books/user`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       if (response.status !== 200) {
         throw new Error("Failed to fetch recommended books");
       }
@@ -73,7 +80,7 @@ class BookService {
 
   async deleteBookRecommendation(bookId: string, token: string) {
     try {
-      const response = await axios.delete(
+      const response: AxiosResponse<any, any, {}> = await axios.delete(
         `${this.apiUrl}/api/books/${bookId}`,
         {
           headers: {

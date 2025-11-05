@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 interface userData {
   username?: string;
@@ -15,7 +15,7 @@ class AuthService {
 
   async register(userData: userData) {
     try {
-      const response = await axios.post(
+      const response: AxiosResponse<any, any, {}> = await axios.post(
         `${this.api}/api/auth/register`,
         userData
       );
@@ -31,7 +31,10 @@ class AuthService {
 
   async login(userData: userData) {
     try {
-      const response = await axios.post(`${this.api}/api/auth/login`, userData);
+      const response: AxiosResponse<any, any, {}> = await axios.post(
+        `${this.api}/api/auth/login`,
+        userData
+      );
       if (response.status !== 200) {
         throw new Error("Login failed !");
       }

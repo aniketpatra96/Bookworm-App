@@ -1,29 +1,54 @@
 import SafeScreen from "@/components/SafeScreen";
-import { Stack, useSegments, useRouter, SplashScreen } from "expo-router";
+import {
+  Stack,
+  useSegments,
+  useRouter,
+  SplashScreen,
+  Router,
+} from "expo-router";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 import { ActivityIndicator, View } from "react-native";
 import COLORS from "@/constants/colors";
-import useAuthStore from "@/store/authStore";
+import useAuthStore, { LoggedInUser } from "@/store/authStore";
 import { useEffect, useState } from "react";
+
+type SegmentsType =
+  | ["_sitemap"]
+  | ["(auth)"]
+  | ["signup"]
+  | ["(auth)", "signup"]
+  | ["(tabs)"]
+  | ["create"]
+  | ["(tabs)", "create"]
+  | ["profile"]
+  | ["(tabs)", "profile"];
 
 SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded]: [boolean, any] = useFonts({
     JetBrainsMonoMedium: require("@/assets/fonts/JetBrainsMono-Medium.ttf"),
     SpaceMonoRegular: require("@/assets/fonts/SpaceMono-Regular.ttf"),
   });
 
-  const router = useRouter();
-  const segments = useSegments();
-  const { checkAuth, user, token } = useAuthStore();
+  const router: Router = useRouter();
+  const segments: SegmentsType = useSegments();
+  const {
+    checkAuth,
+    user,
+    token,
+  }: {
+    checkAuth: () => Promise<void>;
+    user: LoggedInUser;
+    token: string | null;
+  } = useAuthStore();
 
-  const [isReady, setIsReady] = useState(false);
+  const [isReady, setIsReady] = useState<boolean>(false);
 
   // Wait for auth check before navigating
   useEffect(() => {
-    const init = async () => {
+    const init: () => Promise<void> = async () => {
       await checkAuth();
       setIsReady(true);
     };
@@ -33,8 +58,8 @@ export default function RootLayout() {
   // Navigate only after everything is ready
   useEffect(() => {
     if (!isReady || !fontsLoaded) return; // ✅ wait until ready
-    const inAuthScreen = segments[0] === "(auth)";
-    const isSignedIn = !!(user && token);
+    const inAuthScreen: boolean = segments[0] === "(auth)";
+    const isSignedIn: boolean = !!(user && token);
 
     if (!isSignedIn && !inAuthScreen) {
       router.replace("/(auth)");

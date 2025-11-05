@@ -16,19 +16,31 @@ import { Ionicons } from "@expo/vector-icons";
 import COLORS from "@/constants/colors";
 import { Link } from "expo-router";
 import useAuthStore from "@/store/authStore";
+import ResponseProps from "@/services/ResponseProps";
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const { isLoading, login, isCheckingAuth } = useAuthStore();
+  const {
+    isLoading,
+    login,
+    isCheckingAuth,
+  }: {
+    isLoading: boolean;
+    login: (
+      email: string,
+      password: string
+    ) => Promise<{ success: boolean; error?: string }>;
+    isCheckingAuth: boolean;
+  } = useAuthStore();
 
-  const handleLogin = async () => {
+  const handleLogin: () => Promise<void> = async () => {
     if (!email || !password) {
       Alert.alert("Error", "Please fill all the fields");
       return;
     }
-    const result = await login(email, password);
+    const result: ResponseProps = await login(email, password);
     if (result.success) {
       setEmail("");
       setPassword("");
